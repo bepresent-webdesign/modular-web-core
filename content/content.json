@@ -1,0 +1,53 @@
+{
+    "hero": {
+        "hero_image": "",
+        "hero_title": "Willkommen auf der Seite der fleißigen Mustermann Handwerker",
+        "hero_subtitle": "DIE Internet-Visitenkarte für alle, die mir ihren Händen arbeiten",
+        "hero_claim": "Eine moderne Handwerkseite \/ Visitenkarte für innovative Betriebe"
+    },
+    "services": {
+        "services_section_title": "Hier beschreiben Sie Ihre Angebote",
+        "services_items": [
+            {
+                "title": "HANDWERK",
+                "short_text": "Egal ob Schreiner oder Friseursalon, ob Schlosser oder Massagesalon, Mechatroniker oder Kosmetiksalon, Klempner oder Nagelstudio: hier können Sie Ihr Angebot beschreiben. <br>\r\nLaden sie nebenstehend ihre eigenen Bilder hoch, einfach durch verschieben oder Auswahlmenü."
+            },
+            {
+                "title": "WEITERE ANGEBOTE ODER INHALTE",
+                "short_text": "Beschreiben Sie hier all das was Sie sonst noch erzählen wollen. Alle Überschriften und Texte sind von Ihnen nach Ihren Wünschen zu einzutragen."
+            },
+            {
+                "title": "PREISLISTE",
+                "short_text": "Hier können Sie Ihre Preise eintragen. Sicherlich nützlich für Friseur-, Massage- oder Nagelstudios. Sie können aber auch einen anderen Titel wähl und etwas anderes reinschreiben, was zu Ihrem Angebot besser passt oder was immer Sie gerne möchten. Es steht Ihnen frei. Nutzen Sie den zur Verfügung stehenden Platz."
+            }
+        ]
+    },
+    "about": {
+        "about_title": "Über uns",
+        "about_text": "Erzählen Sie hier <b>Ihre Story,<\/b> beschreiben Sie hier Ihr Unternehmen.<br>\r\n<br>\r\nOder beschreiben Sie Referenzprojekte oder sonstige Leistungen. Ganz nach Ihren Wünschen. 😀<br>\r\n<br>"
+    },
+    "contact": {
+        "contact_title": "Kontakt",
+        "contact_text": "Hier stehen all Ihre Kontaktdaten, welche Sie im Editor in der Maske eintragen.<br>\r\n<br>\r\nMusterstraße 1<br>\r\n12345 Musterstadt",
+        "contact_address": {
+            "company": "Mary & Max Mustermann",
+            "addition": "",
+            "street": "Musterstraße 1",
+            "zip": "12345",
+            "city": "Musterstadt"
+        },
+        "contact_email": "info@mustermann.com",
+        "contact_phone_landline": "+49 123 456789",
+        "contact_fax": "",
+        "contact_mobile": "+49 1212 3456789"
+    },
+    "footer": {
+        "footer_note": "Zum Beispiel <b>Öffnungszeiten<\/b>:<br>\r\nMontag - Freitag 8 Uhr bis 17 Uhr<br>\r\nSamstag 8-12 Uhr<br>\r\nSonntag geschlossen"
+    },
+    "images": {
+        "hero_image": "assets\/img\/hero-base.webp",
+        "details_image": "assets\/img\/details-base.webp",
+        "portrait_image": "uploads\/img\/portrait_image_20260216_150703_767001.webp",
+        "contact_image": "uploads\/img\/contact_image_20260216_150624_0c5577.webp"
+    }
+}

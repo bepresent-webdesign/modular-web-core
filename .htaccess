@@ -1,0 +1,15 @@
+# Universal Core Mini-CMS (neutral, copy-safe)
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    # Bei Installation in Unterordner: folgende Zeile einkommentieren und Pfad anpassen:
+    # RewriteBase /modular-web-core-php_v1_base/
+
+    # Security: block direct access to sensitive dirs (PHP reads by path)
+    RewriteRule ^(data|content|backups)/ - [F,L]
+
+    # Frontend routes: /impressum, /datenschutz (saubere URLs)
+    # Links nutzen Fallback index.php?page=... – funktioniert ohne Rewrite
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^/?(impressum|datenschutz)/?$ index.php?page=$1 [L,QSA]
+</IfModule>
