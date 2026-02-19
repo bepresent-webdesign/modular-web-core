@@ -5,3 +5,31 @@ data/
 content/uploads/
 *.log
 
+# System files
+.DS_Store
+Thumbs.db
+
+# Environment files
+.env
+.env.local
+
+# Logs
+*.log
+
+# Cache
+/cache/
+/tmp/
+
+# Vendor (if Composer is used later)
+/vendor/
+
+# Node modules (if frontend tooling is added later)
+/node_modules/
+
+# IDE files
+.vscode/
+.idea/
+
+# Backup files
+*.bak
+*.old
