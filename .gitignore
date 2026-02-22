@@ -33,3 +33,20 @@ Thumbs.db
 # Backup files
 *.bak
 *.old
+
+# ----------------------------
+# Runtime uploads (do not version)
+# ----------------------------
+
+uploads/**
+!uploads/.gitkeep
+!uploads/images/.gitkeep
+!uploads/trash/.gitkeep
+
+# ----------------------------
+# Runtime uploads (do not version)
+# ----------------------------
+
+uploads/*
+!uploads/.gitkeep
+
