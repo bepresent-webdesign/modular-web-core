@@ -62,22 +62,26 @@ final class TokenService
         [$payloadB64, $sigB64] = $parts;
 
         try {
-            self::base64urlDecode($payloadB64);
-            self::base64urlDecode($sigB64);
+            $payloadRaw = self::base64urlDecode($payloadB64);
+            $sigRaw = self::base64urlDecode($sigB64);
         } catch (\RuntimeException $e) {
             throw new \RuntimeException('Invalid base64url in token', 21);
         }
 
-        $expectedSig = $this->sign($payloadB64);
-        $expectedRaw = self::base64urlDecode($expectedSig);
-        $actualRaw = self::base64urlDecode($sigB64);
+        // Reject non-canonical base64url (ignored-bit tampering)
+        if (self::base64urlEncode($payloadRaw) !== $payloadB64) {
+            throw new \RuntimeException('Non-canonical base64url in payload', 21);
+        }
+        if (self::base64urlEncode($sigRaw) !== $sigB64) {
+            throw new \RuntimeException('Non-canonical base64url in signature', 21);
+        }
 
-        if (!hash_equals($expectedRaw, $actualRaw)) {
+        $expectedRaw = self::base64urlDecode($this->sign($payloadB64));
+        if (!hash_equals($expectedRaw, $sigRaw)) {
             throw new \RuntimeException('Invalid token signature', 22);
         }
 
-        $decoded = self::base64urlDecode($payloadB64);
-        $payload = json_decode($decoded, true);
+        $payload = json_decode($payloadRaw, true);
         if (!is_array($payload)) {
             throw new \RuntimeException('Invalid payload JSON', 23);
         }

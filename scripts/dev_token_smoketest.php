@@ -40,9 +40,11 @@ if (($verified['token_id'] ?? '') === $claims['token_id']) {
     exit(1);
 }
 
-// Tamper: replace last character with different one
-$last = substr($token, -1);
-$tampered = substr($token, 0, -1) . ($last === 'x' ? 'y' : 'x');
+// Tamper: flip one char in the signature part (middle index) so decode differs
+[$p, $s] = explode('.', $token, 2);
+$idx = max(0, (int) (strlen($s) / 2));
+$s[$idx] = ($s[$idx] === 'x' ? 'y' : 'x');
+$tampered = $p . '.' . $s;
 try {
     $service->verify($tampered);
     echo "FAIL: tampered token should have been rejected\n";
