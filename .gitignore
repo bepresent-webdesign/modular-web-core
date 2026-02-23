@@ -50,3 +50,8 @@ uploads/**
 uploads/*
 !uploads/.gitkeep
 
+# Build artifacts
+/dist/
+
+# Local secrets
+config/secrets.php
