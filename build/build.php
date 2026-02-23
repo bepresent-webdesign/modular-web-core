@@ -61,7 +61,7 @@ $excludedPrefixes = [
 
 $emptyDirNames = ['data', 'uploads', 'backups'];
 
-$excludedFiles = ['.DS_Store', 'Thumbs.db'];
+$excludedFiles = ['.DS_Store', 'Thumbs.db', 'secrets.php'];
 
 function shouldExclude(string $relPath, array $excludedPrefixes, array $excludedFiles): bool
 {
