@@ -154,7 +154,7 @@ final class TokenStoreJson
             }
 
             $this->touchMeta($modified);
-            $json = json_encode($modified, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+            $json = json_encode($modified, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
             if ($json === false) {
                 throw new \RuntimeException('JSON encode failed', 63);
             }
