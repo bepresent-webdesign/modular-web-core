@@ -4,24 +4,23 @@ declare(strict_types=1);
 
 /**
  * Secure token-based download endpoint.
- * GET /download.php?token=...
+ * GET /download.php?token=...  – verify, consume, stream ZIP
+ * HEAD /download.php?token=... – verify only (no consume), same headers, no body
  *
- * Verifies token via TokenService, consumes via TokenStoreJson, streams ZIP from dist/.
+ * Verifies token via TokenService, consumes via TokenStoreJson (GET only), streams ZIP from dist/.
  * Maps token claims to allowed file paths only (no user-controlled paths).
  */
 
-if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
+$method = $_SERVER['REQUEST_METHOD'] ?? '';
+if ($method !== 'GET' && $method !== 'HEAD') {
     http_response_code(405);
-    header('Allow: GET');
+    header('Allow: GET, HEAD');
     exit;
 }
 
 $token = isset($_GET['token']) ? trim((string) $_GET['token']) : '';
 if ($token === '') {
-    http_response_code(404);
-    header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
-    header('X-Content-Type-Options: nosniff');
-    exit;
+    send404();
 }
 
 define('CORE_ROOT', dirname(__DIR__));
@@ -66,12 +65,14 @@ if (!is_readable($realPath)) {
     send404();
 }
 
-try {
-    $storePath = CORE_ROOT . '/data/download_tokens.json';
-    $store = new \TokenStoreJson($storePath);
-    $store->consume($tokenId);
-} catch (Throwable $e) {
-    send404();
+if ($method === 'GET') {
+    try {
+        $storePath = CORE_ROOT . '/data/download_tokens.json';
+        $store = new \TokenStoreJson($storePath);
+        $store->consume($tokenId);
+    } catch (Throwable $e) {
+        send404();
+    }
 }
 
 $size = filesize($realPath);
@@ -79,12 +80,15 @@ if ($size === false) {
     send404();
 }
 
-header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
-header('Pragma: no-cache');
+header('Cache-Control: no-store');
 header('X-Content-Type-Options: nosniff');
 header('Content-Type: application/zip');
 header('Content-Disposition: attachment; filename="modular-web-core-' . $engineVersion . '.zip"');
-header('Content-Length: ' . $size);
+header('Content-Length: ' . (string) $size);
+
+if ($method === 'HEAD') {
+    exit;
+}
 
 if (ob_get_level()) {
     ob_end_clean();
@@ -95,7 +99,7 @@ exit;
 function send404(): never
 {
     http_response_code(404);
-    header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
+    header('Cache-Control: no-store');
     header('X-Content-Type-Options: nosniff');
     exit;
 }

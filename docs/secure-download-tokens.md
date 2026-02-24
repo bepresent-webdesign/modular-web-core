@@ -52,10 +52,23 @@ For server-side revocation and one-time/max-download enforcement, tokens are per
 Secure download endpoint at `public/download.php`:
 
 - **Token store path**: `CORE_ROOT/data/download_tokens.json` (gitignored)
-
-- **Request**: `GET /download.php?token=...`
+- **Methods**: `GET` (verify + consume + stream), `HEAD` (verify only, no consume, same headers, no body)
+- **Request**: `GET /download.php?token=...` or `HEAD /download.php?token=...`
 - **Success**: Streams ZIP with `Content-Disposition: attachment`, `Content-Type: application/zip`
 - **Failure**: Returns 404 for invalid/expired/revoked/consumed/exceeded tokens (no info leakage)
+
+### Deployment
+
+The endpoint works under both **subfolder** and **root** deployment:
+
+- **Subfolder** (e.g. `/myapp/public/download.php`): Document root points to project root; URL includes `/public/`.
+- **Root** (e.g. `/download.php`): Document root points to `public/`; URL is `/download.php`.
+
+**Recommended production setup**: Point the web server document root to `public/` so that only public assets are exposed. Example Apache config:
+
+```apache
+DocumentRoot /var/www/modular-web-core/public
+```
 
 ### Allowed Files
 
@@ -73,8 +86,11 @@ CORE_ROOT/dist/modular-web-core-{engine_version}.zip
 # 1. Create a test token (manual, run once):
 php scripts/dev_issue6_make_download_token.php
 
-# 2. 200 with valid token:
+# 2. 200 with valid token (GET):
 curl -O -J "https://example.com/download.php?token=YOUR_TOKEN"
+
+# 2b. HEAD (verify only, does not consume):
+curl -I "https://example.com/download.php?token=YOUR_TOKEN"
 
 # 3. 404 on tampered token (flip one char in token):
 curl -w "%{http_code}\n" "https://example.com/download.php?token=TAMPERED_TOKEN"
