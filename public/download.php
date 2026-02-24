@@ -25,6 +25,7 @@ if ($token === '') {
 }
 
 define('CORE_ROOT', dirname(__DIR__));
+chdir(CORE_ROOT);
 require_once CORE_ROOT . '/lib/Secrets.php';
 require_once CORE_ROOT . '/lib/Download/TokenService.php';
 require_once CORE_ROOT . '/lib/Download/TokenStoreJson.php';
@@ -66,7 +67,8 @@ if (!is_readable($realPath)) {
 }
 
 try {
-    $store = new \TokenStoreJson();
+    $storePath = CORE_ROOT . '/data/download_tokens.json';
+    $store = new \TokenStoreJson($storePath);
     $store->consume($tokenId);
 } catch (Throwable $e) {
     send404();
