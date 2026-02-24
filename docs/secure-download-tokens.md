@@ -47,6 +47,43 @@ For server-side revocation and one-time/max-download enforcement, tokens are per
 - **Max downloads**: `max_downloads` and `download_count` enforce one-time or limited downloads; when count reaches max, status becomes `consumed`
 - **Locking**: All write operations use `flock(LOCK_EX)`; read-modify-write is atomic via temp file + `rename()` to ensure valid JSON and no partial writes
 
+## Download Endpoint
+
+Secure download endpoint at `public/download.php`:
+
+- **Request**: `GET /download.php?token=...`
+- **Success**: Streams ZIP with `Content-Disposition: attachment`, `Content-Type: application/zip`
+- **Failure**: Returns 404 for invalid/expired/revoked/consumed/exceeded tokens (no info leakage)
+
+### Allowed Files
+
+Only `file_key = "engine_zip"` is allowed. Path is resolved as:
+
+```
+CORE_ROOT/dist/modular-web-core-{engine_version}.zip
+```
+
+`engine_version` must match semver pattern and the file must exist under `dist/`.
+
+### curl Test Examples
+
+```bash
+# 1. Create a test token (manual, run once):
+php scripts/dev_issue6_make_download_token.php
+
+# 2. 200 with valid token:
+curl -O -J "https://example.com/download.php?token=YOUR_TOKEN"
+
+# 3. 404 on tampered token (flip one char in token):
+curl -w "%{http_code}\n" "https://example.com/download.php?token=TAMPERED_TOKEN"
+
+# 4. 404 on expired token (exp in past - use token from old run or manually expired):
+curl -w "%{http_code}\n" "https://example.com/download.php?token=EXPIRED_TOKEN"
+
+# 5. 404 on second download when max_downloads=1 (reuse same token after first successful download):
+curl -w "%{http_code}\n" "https://example.com/download.php?token=ALREADY_CONSUMED_TOKEN"
+```
+
 ## Security Notes
 
 - **Do not commit** `config/secrets.php`—it is in `.gitignore`
