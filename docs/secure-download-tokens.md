@@ -38,6 +38,15 @@ Required: `token_id`, `exp`, `file_key`, `engine_version`
 
 Optional: `iat`, `iss`, `aud`, `nbf`
 
+## Token Store (JSON)
+
+For server-side revocation and one-time/max-download enforcement, tokens are persisted in a JSON file:
+
+- **Store path**: `data/download_tokens.json` (runtime; `data/` is gitignored)
+- **Revocation**: `TokenStoreJson::revoke($tokenId)` sets `status=revoked` and `revoked_at`
+- **Max downloads**: `max_downloads` and `download_count` enforce one-time or limited downloads; when count reaches max, status becomes `consumed`
+- **Locking**: All write operations use `flock(LOCK_EX)`; read-modify-write is atomic via temp file + `rename()` to ensure valid JSON and no partial writes
+
 ## Security Notes
 
 - **Do not commit** `config/secrets.php`—it is in `.gitignore`
