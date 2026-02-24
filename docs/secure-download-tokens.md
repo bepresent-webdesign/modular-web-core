@@ -51,6 +51,8 @@ For server-side revocation and one-time/max-download enforcement, tokens are per
 
 Secure download endpoint at `public/download.php`:
 
+- **Token store path**: `CORE_ROOT/data/download_tokens.json` (gitignored)
+
 - **Request**: `GET /download.php?token=...`
 - **Success**: Streams ZIP with `Content-Disposition: attachment`, `Content-Type: application/zip`
 - **Failure**: Returns 404 for invalid/expired/revoked/consumed/exceeded tokens (no info leakage)
