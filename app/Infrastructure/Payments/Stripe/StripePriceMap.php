@@ -34,6 +34,21 @@ final class StripePriceMap
     }
 
     /**
+     * Find Stripe price ID by product_id. Returns first matching price.
+     *
+     * @return array{price_id: string, record: array<string, mixed>}|null
+     */
+    public function findByProductId(string $productId): ?array
+    {
+        foreach ($this->prices as $priceId => $record) {
+            if (($record['product_id'] ?? '') === $productId) {
+                return ['price_id' => $priceId, 'record' => $record];
+            }
+        }
+        return null;
+    }
+
+    /**
      * @return array<string, array<string, mixed>>
      */
     private function loadPrices(string $path): array

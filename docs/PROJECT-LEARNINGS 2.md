@@ -105,18 +105,3 @@ However, debugging must:
 ---
 
 *This document must be updated after every non-trivial debugging session. It represents institutional knowledge and prevents future regressions.*
-
----
-
-## 9. Stripe Webhook + Fulfillment (PR #3)
-
-### Flow
-Stripe `checkout.session.completed` → Purchase (provider-agnostic) → FulfillmentService → license, token, email.
-
-### Local test with Stripe CLI
-```bash
-stripe listen --forward-to http://localhost:8888/webhook/stripe.php
-# In another terminal:
-stripe trigger checkout.session.completed
-```
-See `docs/FULFILLMENT.md` for full Stripe CLI setup.

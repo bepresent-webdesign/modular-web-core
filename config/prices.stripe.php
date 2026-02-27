@@ -7,7 +7,7 @@ declare(strict_types=1);
  * Placeholder price IDs (replace with real Stripe price_xxx IDs for production).
  */
 return [
-    'price_test_starter_79' => [
+    'price_1T55KjQ7VVOJqNoZHvdvH4yZ' => [
         'product_id' => 'starter_business_card',
         'mode' => 'payment',
         'currency' => 'eur',
