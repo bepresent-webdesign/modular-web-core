@@ -55,3 +55,7 @@ uploads/*
 
 # Local secrets
 config/secrets.php
+
+# Webhook/order/license/purchase runtime data
+# (purchases/, fulfillment/, email/, webhooks/, orders/, licenses/)
+/storage/
