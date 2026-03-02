@@ -11,7 +11,7 @@ use RuntimeException;
  * Directories are created lazily (like WebhookEventStore).
  *
  * Purchase row schema:
- * - purchase_id, provider, provider_event_id, customer_email,
+ * - purchase_id, provider, provider_event_id, customer_email_hash,
  *   product_id, license_type, amount, currency, created_at, metadata
  */
 final class PurchaseRepository

@@ -40,11 +40,15 @@ $fulfillmentRepo = new \App\Infrastructure\Fulfillment\FulfillmentRepository($fu
 echo "Delivery Foundation smoke test\n";
 echo "==============================\n";
 
+require_once $projectRoot . '/lib/Secrets.php';
+require_once $projectRoot . '/lib/Privacy.php';
+
 // 1. Create Purchase
+$foundationEmail = 'test@example.com';
 $purchase = \App\Domain\Purchase\Purchase::create([
     'provider' => 'stripe',
     'provider_event_id' => 'evt_test_' . time(),
-    'customer_email' => 'test@example.com',
+    'customer_email_hash' => \Privacy::hashCustomerEmail($foundationEmail, \Secrets::customerEmailPepper()),
     'product_id' => 'modular-web-core',
     'license_type' => 'single',
     'amount' => 1999,

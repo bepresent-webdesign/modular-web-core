@@ -14,7 +14,7 @@ use RuntimeException;
  * - purchase_id: string (internal, stable)
  * - provider: string (e.g. "stripe")
  * - provider_event_id: string
- * - customer_email: ?string
+ * - customer_email_hash: ?string (sha256 of normalized email + pepper, DSGVO)
  * - product_id: string
  * - license_type: string
  * - amount: int (minor units, e.g. cents)
@@ -72,16 +72,16 @@ final class Purchase
             throw new RuntimeException('currency must be a non-empty string', 7);
         }
 
-        $customerEmail = $input['customer_email'] ?? null;
-        if ($customerEmail !== null && !is_string($customerEmail)) {
-            throw new RuntimeException('customer_email must be string or null', 8);
+        $customerEmailHash = $input['customer_email_hash'] ?? null;
+        if ($customerEmailHash !== null && !is_string($customerEmailHash)) {
+            throw new RuntimeException('customer_email_hash must be string or null', 8);
         }
 
         return [
             'purchase_id' => $purchaseId,
             'provider' => $provider,
             'provider_event_id' => $providerEventId,
-            'customer_email' => $customerEmail,
+            'customer_email_hash' => $customerEmailHash,
             'product_id' => $productId,
             'license_type' => $licenseType,
             'amount' => $amount,
