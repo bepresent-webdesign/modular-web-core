@@ -38,8 +38,9 @@ final class FulfillmentService
      * Idempotent: if already fulfilled, returns success without side effects.
      *
      * @param array<string, mixed> $purchase Purchase record (from Purchase::create)
+     * @param string|null $customerEmail Email for delivery (not persisted, DSGVO)
      */
-    public function fulfill(array $purchase): FulfillmentResult
+    public function fulfill(array $purchase, ?string $customerEmail = null): FulfillmentResult
     {
         $purchaseId = $purchase['purchase_id'] ?? '';
         if ($purchaseId === '') {
@@ -89,7 +90,6 @@ final class FulfillmentService
 
             $downloadUrl = rtrim($this->baseUrl, '/') . $this->downloadPath . '?token=' . urlencode($tokenString);
 
-            $customerEmail = $purchase['customer_email'] ?? null;
             if (is_string($customerEmail) && $customerEmail !== '') {
                 $this->sendDeliveryEmail($customerEmail, $purchase, $productName, $licenseKey, $downloadUrl, $maxDownloads);
             }

@@ -141,6 +141,43 @@ final class Secrets
 
         return $key;
     }
+
+    /**
+     * Returns the pepper for customer email hashing (DSGVO).
+     * Used as sha256(normalized_email . pepper). Env CUSTOMER_EMAIL_PEPPER or config.
+     *
+     * @throws \RuntimeException if missing or too short (< 16 bytes)
+     */
+    public static function customerEmailPepper(): string
+    {
+        $pepper = getenv('CUSTOMER_EMAIL_PEPPER');
+        if ($pepper !== false && $pepper !== '' && strlen($pepper) >= 16) {
+            return $pepper;
+        }
+
+        $configPath = (defined('CORE_ROOT') ? CORE_ROOT : dirname(__DIR__)) . '/config/secrets.php';
+        if (!is_readable($configPath)) {
+            throw new \RuntimeException(
+                'customer_email_pepper missing. Set CUSTOMER_EMAIL_PEPPER or add to config/secrets.php',
+                13
+            );
+        }
+
+        $config = require $configPath;
+        if (!is_array($config)) {
+            throw new \RuntimeException('config/secrets.php must return an array', 14);
+        }
+
+        $pepper = $config['customer_email_pepper'] ?? '';
+        if (!is_string($pepper) || strlen($pepper) < 16) {
+            throw new \RuntimeException(
+                'customer_email_pepper missing or too short (min 16 bytes)',
+                15
+            );
+        }
+
+        return $pepper;
+    }
 }
 
 /**

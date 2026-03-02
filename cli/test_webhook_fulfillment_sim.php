@@ -31,6 +31,7 @@ spl_autoload_register(static function (string $class) use ($projectRoot): void {
 });
 
 require_once $projectRoot . '/lib/Secrets.php';
+require_once $projectRoot . '/lib/Privacy.php';
 require_once $projectRoot . '/lib/Download/TokenService.php';
 require_once $projectRoot . '/lib/Download/TokenStoreJson.php';
 
@@ -66,10 +67,11 @@ $fulfillmentService = new \App\Application\Fulfillment\FulfillmentService(
 );
 
 $eventId = 'evt_sim_' . time();
+$simEmail = 'sim-test@example.com';
 $purchase = \App\Domain\Purchase\Purchase::create([
     'provider' => 'stripe',
     'provider_event_id' => $eventId,
-    'customer_email' => 'sim-test@example.com',
+    'customer_email_hash' => \Privacy::hashCustomerEmail($simEmail, \Secrets::customerEmailPepper()),
     'product_id' => 'starter_business_card',
     'license_type' => 'standard_license',
     'amount' => 7900,
@@ -85,7 +87,7 @@ echo "Simulated Stripe event: {$eventId}\n";
 echo "Purchase: {$purchase['purchase_id']}\n";
 echo "Product: {$purchase['product_id']}\n\n";
 
-$result = $fulfillmentService->fulfill($purchase);
+$result = $fulfillmentService->fulfill($purchase, $simEmail);
 
 echo "Fulfillment: " . ($result->success ? 'OK' : 'FAILED') . "\n";
 if ($result->downloadUrl !== null && $result->downloadUrl !== '') {

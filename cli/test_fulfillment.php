@@ -32,6 +32,7 @@ spl_autoload_register(static function (string $class) use ($projectRoot): void {
 });
 
 require_once $projectRoot . '/lib/Secrets.php';
+require_once $projectRoot . '/lib/Privacy.php';
 require_once $projectRoot . '/lib/Download/TokenService.php';
 require_once $projectRoot . '/lib/Download/TokenStoreJson.php';
 
@@ -73,10 +74,11 @@ $service = new \App\Application\Fulfillment\FulfillmentService(
     $subjectPrefix,
 );
 
+$testEmail = 'test@example.com';
 $purchase = \App\Domain\Purchase\Purchase::create([
     'provider' => 'test',
     'provider_event_id' => 'evt_fulfill_test_' . time(),
-    'customer_email' => 'test@example.com',
+    'customer_email_hash' => \Privacy::hashCustomerEmail($testEmail, \Secrets::customerEmailPepper()),
     'product_id' => 'starter_business_card',
     'license_type' => 'standard_license',
     'amount' => 7900,
@@ -91,7 +93,7 @@ echo "Purchase: {$purchase['purchase_id']}\n";
 echo "Product: {$purchase['product_id']}\n";
 echo "Mail mode: " . ($mailConfig['mode'] ?? 'pretend') . "\n\n";
 
-$result = $service->fulfill($purchase);
+$result = $service->fulfill($purchase, $testEmail);
 
 echo "Status: {$result->status}\n";
 echo "Success: " . ($result->success ? 'yes' : 'no') . "\n";

@@ -34,6 +34,7 @@ spl_autoload_register(static function (string $class): void {
 });
 
 require_once CORE_ROOT . '/lib/Secrets.php';
+require_once CORE_ROOT . '/lib/Privacy.php';
 require_once CORE_ROOT . '/lib/Download/TokenService.php';
 require_once CORE_ROOT . '/lib/Download/TokenStoreJson.php';
 
@@ -245,7 +246,7 @@ $fulfillmentService = new \App\Application\Fulfillment\FulfillmentService(
     $mailConfig['subject_prefix'] ?? '[Modular Web Core]',
 );
 
-$fulfillmentService->fulfill($purchase);
+$fulfillmentService->fulfill($purchase, $customerEmail);
 
 $eventStore->markProcessed($eventId, $eventType);
 respond200();

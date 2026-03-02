@@ -12,4 +12,6 @@ return [
     'download_path' => '/public/download.php',
     'checkout_success_path' => '/public/checkout/success.php',
     'checkout_cancel_path' => '/public/checkout/cancel.php',
+    'paypal_return_path' => '/public/paypal/return.php',
+    'paypal_cancel_path' => '/public/checkout/cancel.php',
 ];
